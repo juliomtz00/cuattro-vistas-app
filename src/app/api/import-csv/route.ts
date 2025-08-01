@@ -93,17 +93,19 @@ export async function POST(req: NextRequest) {
       }
 
       // Lookup/crea PropertyType
-      let propertyType = await prisma.propertyType.findFirst({ where: { value: propertyTypeName } });
+      const propertyType = await prisma.propertyType.findFirst({ where: { value: propertyTypeName } });
+      // CRITICAL FIX: If propertyType is required in the schema, we must ensure it exists.
       if (!propertyType) {
-        propertyType = await prisma.propertyType.create({ data: { value: propertyTypeName } });
-        warnings.push({ row: rowIndex + 3, field: "propertyType", msg: `Tipo '${propertyTypeName}' agregado` });
+        errors.push({ row: rowIndex + 3, field: "propertyType", msg: `Tipo '${propertyTypeName}' no encontrado. Se necesita un valor válido.` });
+        continue; // Skip this record if a required foreign key is missing
       }
 
       // Lookup/crea Status
-      let status = await prisma.propertyStatus.findFirst({ where: { value: statusName.toLowerCase() } });
+      const status = await prisma.propertyStatus.findFirst({ where: { value: statusName.toLowerCase() } });
+      // CRITICAL FIX: If status is required, we must ensure it exists.
       if (!status) {
-        status = await prisma.propertyStatus.create({ data: { value: statusName } });
-        warnings.push({ row: rowIndex + 3, field: "status", msg: `Estatus '${statusName}' agregado` });
+        errors.push({ row: rowIndex + 3, field: "status", msg: `Estatus '${statusName}' no encontrado. Se necesita un valor válido.` });
+        continue; // Skip this record if a required foreign key is missing
       }
 
       // Lookup/crea Provider
@@ -116,7 +118,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Lookup/crea valores de tablas auxiliares (puedes cambiar nombres si tu schema usa otros)
+      // Lookup/crea valores de tablas auxiliares
       const propertyRange = await lookupOrCreate("propertyRange", obj.propertyRange, "propertyRange", rowIndex + 3, errors, warnings);
       const illumination = await lookupOrCreate("illumination", obj.illumination, "illumination", rowIndex + 3, errors, warnings);
       const propertyCondition = await lookupOrCreate("propertyCondition", obj.propertyCondition, "propertyCondition", rowIndex + 3, errors, warnings);
@@ -142,16 +144,19 @@ export async function POST(req: NextRequest) {
             price: obj.price ? Number(obj.price?.replace(/[^0-9.]/g, "")) : 0,
             userId: "admin", // Hardcode or use actual user if available
             availability: ["sí", "si", "yes", "true"].includes((obj.availability || "").toLowerCase()),
-            videoUrl: obj.videoUrl || null,
+            videoUrl: obj.videoUrl || undefined,
 
-            propertyTypeId: propertyType?.id || null,
-            statusId: status?.id || null,
-            providerId: provider?.id || null,
-            propertyRangeId: propertyRange?.id || null,
-            illuminationId: illumination?.id || null,
-            propertyConditionId: propertyCondition?.id || null,
-            zoneDemandId: zoneDemand?.id || null,
-            accesibilityId: accesibility?.id || null,
+            // CRITICAL FIX: Direct assignment since we checked for existence above
+            propertyTypeId: propertyType.id,
+            statusId: status.id,
+            
+            // These are likely optional fields, so the `|| undefined` logic is correct
+            providerId: provider?.id || undefined,
+            propertyRangeId: propertyRange?.id || undefined,
+            illuminationId: illumination?.id || undefined,
+            propertyConditionId: propertyCondition?.id || undefined,
+            zoneDemandId: zoneDemand?.id || undefined,
+            accesibilityId: accesibility?.id || undefined,
 
             features: {
               create: {
@@ -178,9 +183,10 @@ export async function POST(req: NextRequest) {
             location: {
               create: {
                 address: obj.address || "",
-                zipCode: obj.zipCode ? Number(formatZip(obj.zipCode)) : null,
-                urlGoogleMaps: obj.urlGoogleMaps || "",
-                cityId: city?.id || null,
+                zipCode: obj.zipCode ? Number(formatZip(obj.zipCode)) : undefined,
+                urlGoogleMaps: obj.urlGoogleMaps || undefined,
+                // Use nested connect for the required city relationship
+                city: { connect: { id: city.id } }, 
                 value: "auto",
               },
             },
@@ -193,7 +199,7 @@ export async function POST(req: NextRequest) {
                     .filter(img => img.url),
                 }
               : undefined,
-          }
+          },
         });
         imported++;
       } catch (e: any) {

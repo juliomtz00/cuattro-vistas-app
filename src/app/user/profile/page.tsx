@@ -3,13 +3,39 @@ import { getUserById } from '@/lib/actions/user';
 import PageTitle from '@/app/components/pageTitle';
 import React from 'react';
 
+// Define the shape of the user object as it comes from the database.
+// This is likely what getUserById returns without any includes.
+type DbUser = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  email: string;
+  avatarUrl: string | null;
+  createdAt: Date;
+};
+
+// Define the type for the user object when it includes the 'properties' relation.
+// This matches the data structure your component is trying to access.
+type UserWithProperties = DbUser & {
+  properties: { id: number }[]; // We only need the id to count them
+};
+
 export default async function ProfilePage() {
   const { getUser } = await getKindeServerSession();
   const user = await getUser();
+
   if (!user) {
     return <div className="text-red-500 text-center mt-10">No estás autenticado</div>;
   }
-  const dbUser = await getUserById(user.id);
+
+  // Get the user from the database.
+  // We'll cast the result to our more specific type.
+  // You must ensure that the getUserById function itself includes the properties:
+  // e.g., prisma.user.findUnique({ where: { id: userId }, include: { properties: true }})
+  const dbUser = await getUserById(user.id) as UserWithProperties | null;
+
   if (!dbUser) {
     return <div className="text-red-500 text-center mt-10">Usuario no encontrado</div>;
   }

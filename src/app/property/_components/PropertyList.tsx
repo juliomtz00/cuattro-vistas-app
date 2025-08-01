@@ -7,7 +7,7 @@ type Property = {
   title: string;
   price: number;
   type: { value: string };
-  location?: { city?: { name: string; state?: { name: string } } };
+  location?: { city?: { name: string; state?: { name: string } } } | null;
   images: { url: string }[];
 };
 

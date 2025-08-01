@@ -64,12 +64,12 @@ function buildPropertyWhere(params: PropertySearchParams = {}): Prisma.PropertyW
 export default async function PropertiesPage({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
   // Convert searchParams to flat strings
   const typedParams: PropertySearchParams = {};
   const params = searchParams ? await searchParams : {};
-  Object.entries(params).forEach(([key, value]) => {
+Object.entries(params).forEach(([key, value]) => {
     if (typeof value === "string") typedParams[key as keyof PropertySearchParams] = value;
     else if (Array.isArray(value)) typedParams[key as keyof PropertySearchParams] = value[0] as string;
   });
