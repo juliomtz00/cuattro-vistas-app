@@ -2,13 +2,13 @@ import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import PropertyDetailClient from "./PropertyDetailClient";
 
-interface Props {
+export default async function PropertyPage({
+  params,
+}: {
   params: { id: string };
-}
-
-export default async function PropertyPage({ params }: Props) {
+}) {
   const property = await prisma.property.findUnique({
-    where: { id: +params.id },
+    where: { id: parseInt(params.id, 10) }, // parse to number if your id is number type
     include: {
       status: true,
       type: true,
@@ -22,6 +22,5 @@ export default async function PropertyPage({ params }: Props) {
 
   if (!property) return notFound();
 
-  // Cast for type safety (see notes above)
   return <PropertyDetailClient property={property} />;
 }
