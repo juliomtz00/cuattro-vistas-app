@@ -34,7 +34,7 @@ export default function SignInPanelClient({ user, dbUser, isAuthenticated }: Sig
   return (
     <div className="flex gap-3">
       <Button color="primary">
-        <LoginLink>Iniciar Sesión / Registrarse</LoginLink>
+        <LoginLink>Iniciar Sesión</LoginLink>
       </Button>
     </div>
   );

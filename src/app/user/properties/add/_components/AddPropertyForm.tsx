@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "@heroui/react";
 import Stepper from "./Stepper";
 import Basic from "./basic";
@@ -46,6 +46,8 @@ interface AddPropertyFormProps {
   conditions: PropertyCondition[];
   demands: ZoneDemand[];
   accesibilities: Accesibility[];
+  property?: PropertyFormData;   // <-- Añadido para editar
+  isEdit?: boolean;              // <-- Añadido para editar
 }
 
 export type AddPropertyInputType = z.infer<typeof AddPropertyFormSchema>;
@@ -60,6 +62,8 @@ export default function AddPropertyForm({
   conditions,
   demands,
   accesibilities,
+  property,
+  isEdit = false,
 }: AddPropertyFormProps) {
   const [step, setStep] = useState(0);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -101,6 +105,19 @@ export default function AddPropertyForm({
     greenAreas: "",
     files: [],
   });
+
+  // Soporte para edición: si property cambia, setear los datos al formData
+  useEffect(() => {
+    if (isEdit && property) {
+      setFormData(prev => ({
+        ...prev,
+        ...property,
+        propertyId: property.propertyId || "",
+        files: [], // Opcional: puedes mapear aquí archivos existentes para previews
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit, property]);
 
   const router = useRouter();
   const { user } = useKindeBrowserClient();
@@ -160,7 +177,7 @@ export default function AddPropertyForm({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
     const fullValidation = AddPropertyFormSchema.safeParse(formData);
     if (!fullValidation.success) {
@@ -183,8 +200,14 @@ export default function AddPropertyForm({
         ? await uploadToS3(formData.files)
         : [];
 
-      await saveProperty(fullValidation.data, uploadedUrls, user.id);
-      toast.success("Propiedad guardada exitosamente");
+      await saveProperty(
+        { ...fullValidation.data, propertyId: formData.propertyId },
+        uploadedUrls,
+        user.id,
+        isEdit // <-- Solo esto, el resto igual
+      );
+
+      toast.success(isEdit ? "Propiedad actualizada exitosamente" : "Propiedad guardada exitosamente");
 
       router.push("/user/properties");
     } catch (err) {
@@ -262,7 +285,7 @@ export default function AddPropertyForm({
               </Button>
             )}
             <Button color={step === steps.length - 1 ? "success" : "secondary"} type="submit">
-              {step === steps.length - 1 ? "Enviar" : "Siguiente"}
+              {step === steps.length - 1 ? (isEdit ? "Actualizar" : "Enviar") : "Siguiente"}
             </Button>
           </div>
         </Form>

@@ -78,7 +78,7 @@ const Appbar = ({ children }: AppbarProps) => {
                 className={
                   "w-full " +
                   (isActive
-                    ? "font-bold underline underline-offset-4 text-blue-700"
+                    ? "font-bold underline underline-offset-4 text-secondary"
                     : "")
                 }
                 color={isActive ? "primary" : "foreground"}

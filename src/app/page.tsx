@@ -38,7 +38,7 @@ export default async function Home() {
           </p>
           <Link
             href="/property"
-            className="mt-auto self-start px-4 py-2 rounded-xl bg-primary hover:bg-blue-100 text-white text-sm font-semibold"
+            className="items-center mt-auto self-start  px-4 py-2 rounded-xl bg-primary hover:bg-blue-100 text-white text-sm font-semibold"
           >
             Ver todas las propiedades
           </Link>
