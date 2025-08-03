@@ -2,8 +2,20 @@
 import React, { useRef, useState } from "react";
 import { Button } from "@heroui/react";
 
+// Define the types for the props of the CorrectionModal component
+interface CorrectionModalProps {
+  errors: Array<{
+    row: number;
+    field?: string;
+    value?: string;
+    suggestions?: string[];
+    message: string;
+  }>;
+  onClose: () => void;
+}
+
 // Pequeño componente de corrección para campos problemáticos
-function CorrectionModal({ errors, onClose }) {
+function CorrectionModal({ errors, onClose }: CorrectionModalProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
@@ -12,7 +24,8 @@ function CorrectionModal({ errors, onClose }) {
           {errors.map((err, idx) => (
             <li key={idx} className="mb-2">
               <b>Fila:</b> {err.row} — <b>{err.message}</b><br />
-              {err.suggestions?.length > 0 && (
+              {/* Added an explicit check for the existence of `err.suggestions` to resolve the type error */}
+              {err.suggestions && err.suggestions.length > 0 && (
                 <>
                   <span className="text-gray-500">Sugerencias: </span>
                   {err.suggestions.join(", ")}

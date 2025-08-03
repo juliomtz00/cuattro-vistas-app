@@ -1,4 +1,3 @@
-// /api/import-csv/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { parse } from "csv-parse/sync";
 import prisma from "@/lib/prisma";
@@ -234,7 +233,7 @@ export async function POST(req: NextRequest) {
                   create: obj.images
                     .split(";")
                     .map((url: string) => ({ url: url.trim() }))
-                    .filter(img => img.url),
+                    .filter((img: { url: string }) => img.url),
                 }
               : undefined,
           },

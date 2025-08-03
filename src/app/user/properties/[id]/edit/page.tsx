@@ -3,12 +3,17 @@ import AddPropertyForm from "../../add/_components/AddPropertyForm";
 import { notFound, redirect } from "next/navigation";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-// 👇 Ajusta el type si tus IDs son string o number
+// This is the correct way to define the props for a Next.js page component
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const EditPropertyPage = async ({ params }: Props) => {
+const EditPropertyPage = async ({ params, searchParams }: Props) => {
+  // Await the params and searchParams objects to get the actual values
+  const { id } = await params;
+  const currentSearchParams = await searchParams;
+
   // Cargar los catálogos necesarios
   const [
     types,
@@ -34,7 +39,7 @@ const EditPropertyPage = async ({ params }: Props) => {
     prisma.zoneDemand.findMany(),
     prisma.accesibility.findMany(),
     prisma.property.findUnique({
-        where: { id: +params.id },
+        where: { id: +id },
         include: {
             location: {
             include: {

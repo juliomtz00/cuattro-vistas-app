@@ -6,15 +6,21 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+// Corrected interface to explicitly define both params and searchParams as Promises
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>; // <--- Changed this line
 }
 
-async function DeletePropertyPage({ params }: Props) {
+async function DeletePropertyPage({ params, searchParams }: Props) { // Destructure searchParams
+  // Await both params and searchParams
+  const { id } = await params;
+  const currentSearchParams = await searchParams; // <--- Added this line
+
   const { getUser } = getKindeServerSession();
   const propertyPromise = prisma.property.findUnique({
     where: {
-      id: +params.id,
+      id: +id,
     },
   });
   const [property, user] = await Promise.all([propertyPromise, getUser()]);
@@ -25,7 +31,7 @@ async function DeletePropertyPage({ params }: Props) {
   const deleteAction = async () => {
     "use server";
     try {
-      await deleteProperty(+params.id);
+      await deleteProperty(+id);
       redirect("/user/properties");
     } catch (e) {
       throw e;
