@@ -234,7 +234,7 @@ export default function PropertyFilter({
               >
                 <option value="">Seleccione Rango</option>
                 {ranges.map((r) => (
-                  <option key={r.id} value={r.id}>{t.value}</option>
+                  <option key={r.id} value={r.id}>{r.value}</option>
                 ))}
               </select>
             </div>
