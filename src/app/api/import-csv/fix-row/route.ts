@@ -1,19 +1,21 @@
+// app/api/import-csv/fix-row/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { matchAndPrepareProperty, createPropertyInDB } from "../importHelpers";
+import prisma from "@/lib/prisma";
+import { fixAndMatch } from "../importHelpers";
 
 export async function POST(req: NextRequest) {
-  try {
-    const { row, field, value, original } = await req.json();
-    const fixedObj = { ...original, [field]: value };
-    const result = await matchAndPrepareProperty(fixedObj, row);
+  const body = await req.json();
+  const { field, value, context } = body;
 
-    if (result.failedRow) {
-      return NextResponse.json({ failedRow: result.failedRow }, { status: 422 });
+  try {
+    const result = await fixAndMatch(field, value, context);
+
+    if (!result) {
+      return NextResponse.json({ error: "No se pudo corregir el campo. Intenta con otro valor." }, { status: 422 });
     }
 
-    await createPropertyInDB(result.match);
-    return NextResponse.json({ ok: true });
-  } catch (error: any) {
-    return NextResponse.json({ failedRow: { message: error.message } }, { status: 400 });
+    return NextResponse.json({ ok: true, data: result });
+  } catch (e) {
+    return NextResponse.json({ error: "Error inesperado al corregir el campo." }, { status: 500 });
   }
 }

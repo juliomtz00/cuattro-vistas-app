@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { Button } from "@heroui/react";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 // For each error, let user pick/correct and retry import of that row
 function CorrectionModal({
@@ -91,6 +92,7 @@ function CorrectionModal({
 
 export default function ImportCSV() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user } = useKindeBrowserClient();
   const [errors, setErrors] = useState<any[]>([]);
   const [pendingErrors, setPendingErrors] = useState<any[]>([]);
   const [imported, setImported] = useState<number | null>(null);
@@ -144,7 +146,7 @@ export default function ImportCSV() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !user?.id) return;
 
     setErrors([]);
     setPendingErrors([]);
@@ -154,6 +156,7 @@ export default function ImportCSV() {
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("userId", user.id); // <-- IMPORTANTE
 
     const res = await fetch("/api/import-csv", {
       method: "POST",
