@@ -88,14 +88,14 @@ export default function PropertyFilter({
   }
 
   return (
-    <div className="w-full bg-white rounded-2xl shadow px-5 py-4">
+    <div className="w-full bg-white rounded-2xl shadow px-5">
       {/* Collapsible trigger */}
       <button
         className="flex items-center gap-2 text-lg font-semibold mb-6 focus:outline-none"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >
-        <span className="material-icons text-blue-600">{open ? "Cerrar" : "Filtrar"}</span>
+        <span className="material-icons text-primary">{open ? "Cerrar" : "Filtrar"}</span>
         Propiedades
       </button>
       {/* Collapsible content */}
