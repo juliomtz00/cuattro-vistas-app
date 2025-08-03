@@ -32,23 +32,23 @@ export default function Footer() {
             <p className="font-bold text-gray-900 mb-4">Accesos Rápidos</p>
             <ul className="flex flex-wrap gap-10 text-sm">
               <li>
-                <a href="#" className="text-gray-700 transition hover:opacity-75">
+                <Link href='/' className="text-gray-700 transition hover:opacity-75">
                   Inicio
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-700 transition hover:opacity-75">
+                <Link href="/us" className="text-gray-700 transition hover:opacity-75">
+                  Nosotros
+                </Link>
+              </li>
+              <li>
+                <Link href="/property" className="text-gray-700 transition hover:opacity-75">
                   Propiedades
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-700 transition hover:opacity-75">
-                  Administración
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-700 transition hover:opacity-75">
-                  Avalúos
+                <a href="/contact" className="text-gray-700 transition hover:opacity-75">
+                  Contacto
                 </a>
               </li>
             </ul>
