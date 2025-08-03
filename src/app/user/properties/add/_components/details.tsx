@@ -95,7 +95,7 @@ const Details: React.FC<DetailsProps> = ({ formData, setFormData, fieldErrors })
       {/* Connectivity */}
       <Input
         label="Conectividad"
-        placeholder="Ej: Internet de fibra óptica"
+        placeholder="Ej: Centro comercial, plaza"
         value={formData.connectivity}
         onChange={(e) => setFormData((prev) => ({ ...prev, connectivity: e.target.value }))}
       />

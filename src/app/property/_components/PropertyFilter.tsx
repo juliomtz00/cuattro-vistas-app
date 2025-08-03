@@ -37,9 +37,9 @@ interface PropertyFilterProps {
   initialParams?: PropertySearchParams;
 }
 
-const bedroomsList = [1, 2, 3, 4, 5];
-const bathroomsList = [1, 2, 3, 4, 5];
-const parkingList = [0, 1, 2, 3, 4];
+const bedroomsList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const bathroomsList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const parkingList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function PropertyFilter({
   states,
