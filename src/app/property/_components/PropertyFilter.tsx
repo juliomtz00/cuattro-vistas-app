@@ -263,7 +263,7 @@ export default function PropertyFilter({
               />
             </div>
           </div>
-          <div className="flex flex-wrap gap-3 mt-4">
+          <div className="flex flex-wrap gap-3 my-4">
             <button type="submit" className="bg-primary text-white rounded-xl px-5 py-2 font-semibold shadow hover:bg-secondary">
               Aplicar Filtros
             </button>
