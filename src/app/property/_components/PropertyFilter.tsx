@@ -88,14 +88,14 @@ export default function PropertyFilter({
   }
 
   return (
-    <div className="w-full m-4 bg-white rounded-2xl shadow px-5 py-6">
+    <div className="w-full m-4 bg-white rounded-2xl shadow items-center">
       {/* Collapsible trigger */}
       <button
         className="flex items-center gap-2 text-lg font-semibold mb-6 focus:outline-none"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >
-        <span className="material-icons text-blue-600">{open ? "Cerrar" : "Filtrar"}</span>
+        <span className="material-icons text-primary">{open ? "Cerrar" : "Filtrar"}</span>
         Propiedades
       </button>
       {/* Collapsible content */}
@@ -264,10 +264,10 @@ export default function PropertyFilter({
             </div>
           </div>
           <div className="flex flex-wrap gap-3 mt-4">
-            <button type="submit" className="bg-blue-600 text-white rounded-xl px-5 py-2 font-semibold shadow hover:bg-blue-700">
+            <button type="submit" className="bg-primary text-white rounded-xl px-5 py-2 font-semibold shadow hover:bg-secondary">
               Aplicar Filtros
             </button>
-            <button type="button" className="bg-gray-100 text-gray-700 rounded-xl px-5 py-2 font-semibold hover:bg-gray-200" onClick={resetFilters}>
+            <button type="button" className="bg-gray-100 text-secondary rounded-xl px-5 py-2 font-semibold hover:bg-gray-200" onClick={resetFilters}>
               Limpiar Selección
             </button>
           </div>

@@ -36,15 +36,15 @@ export default function PropertyList({ properties }: { properties: Property[] })
             </div>
             <div className="p-4 flex-1 flex flex-col">
               <div className="flex items-center justify-between mb-1">
-                <h6 className="font-semibold text-lg text-gray-900 truncate group-hover:text-blue-700">{prop.title}</h6>
-                <span className="font-bold text-blue-600 text-base">
+                <h6 className="font-semibold text-lg text-gray-900 truncate group-hover:text-primary">{prop.title}</h6>
+                <span className="font-bold text-primary text-base">
                   {prop.price?.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
                 </span>
               </div>
               <div className="text-gray-500 text-sm mb-1 truncate">
                 {prop.location?.city?.name || "Ciudad"}, {prop.location?.city?.state?.name || "Estado"}
               </div>
-              <span className="inline-block bg-blue-100 text-blue-700 rounded px-3 py-0.5 text-xs font-semibold w-max">
+              <span className="inline-block bg-blue-100 text-primary rounded px-3 py-0.5 text-xs font-semibold w-max">
                 {prop.type?.value}
               </span>
             </div>
