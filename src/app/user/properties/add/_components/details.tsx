@@ -14,6 +14,15 @@ const Details: React.FC<DetailsProps> = ({ formData, setFormData, fieldErrors })
       {/* Bathrooms */}
       <Input
         type="number"
+        label="Recámaras"
+        placeholder="Ej: 2"
+        value={formData.bedrooms}
+        onChange={(e) => setFormData((prev) => ({ ...prev, bedrooms: e.target.value }))}
+        isInvalid={!!fieldErrors.bedrooms}
+        errorMessage={fieldErrors.bedrooms}
+      />
+      <Input
+        type="number"
         label="Baños Completos"
         placeholder="Ej: 2"
         value={formData.bathrooms}
